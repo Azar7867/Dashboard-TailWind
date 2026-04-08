@@ -5,10 +5,11 @@ import {
   Folder,
   Settings,
   HelpCircle,
+  X,
 } from "lucide-react";
 import { NavLink } from "react-router-dom";
 
-export default function Sidebar() {
+export default function Sidebar({ isOpen, toggleSidebar }) {
   const menu = [
     { name: "Dashboard", icon: LayoutDashboard, path: "/" },
     { name: "Analytics", icon: BarChart3, path: "/analytics" },
@@ -20,14 +21,22 @@ export default function Sidebar() {
   ];
 
   return (
-    <div className="w-64 h-screen bg-gradient-to-b from-[#0F172A] via-[#1E293B] to-black text-white p-5">
+    <div className={`fixed lg:static inset-y-0 left-0 z-50 w-72 h-screen bg-gradient-to-b from-[#0F172A] via-[#1E293B] to-black text-white p-5 transform transition-transform duration-300 ease-in-out ${isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}`}>
       
-      {/* Logo */}
-      <div className="flex items-center gap-2 mb-10">
-        <div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
-          ⚛️
+      {/* Logo & Close Button */}
+      <div className="flex items-center justify-between mb-10">
+        <div className="flex items-center gap-2">
+          <div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
+            ⚛️
+          </div>
+          <h1 className="text-lg font-semibold">ReactDash</h1>
         </div>
-        <h1 className="text-lg font-semibold">ReactDash</h1>
+        <button 
+          onClick={toggleSidebar}
+          className="lg:hidden p-2 hover:bg-white/10 rounded-lg"
+        >
+          <X size={20} />
+        </button>
       </div>
 
       {/* Menu */}
@@ -39,6 +48,9 @@ export default function Sidebar() {
             <NavLink
               key={index}
               to={item.path}
+              onClick={() => {
+                if (window.innerWidth < 1024) toggleSidebar();
+              }}
               className={({ isActive }) =>
                 `flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
                   isActive
@@ -55,4 +67,4 @@ export default function Sidebar() {
       </nav>
     </div>
   );
-}
+}
