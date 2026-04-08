@@ -1,0 +1,47 @@
+[
+  {
+    "id": 1,
+    "user": "Rahul",
+    "bike": "Royal Enfield Classic 350",
+    "rating": 5,
+    "review": "Excellent comfort and powerful engine. Perfect for long rides.",
+    "time": "2 hours ago",
+    "avatar": "https://i.pravatar.cc/40?img=11"
+  },
+  {
+    "id": 2,
+    "user": "Arjun",
+    "bike": "KTM Duke 200",
+    "rating": 4,
+    "review": "Great performance but mileage could be better.",
+    "time": "5 hours ago",
+    "avatar": "https://i.pravatar.cc/40?img=12"
+  },
+  {
+    "id": 3,
+    "user": "Vijay",
+    "bike": "Yamaha R15 V4",
+    "rating": 5,
+    "review": "Amazing design and smooth handling.",
+    "time": "1 day ago",
+    "avatar": "https://i.pravatar.cc/40?img=13"
+  },
+  {
+    "id": 4,
+    "user": "Karthik",
+    "bike": "TVS Apache RTR 160",
+    "rating": 4,
+    "review": "Best bike under budget with good pickup.",
+    "time": "2 days ago",
+    "avatar": "https://i.pravatar.cc/40?img=14"
+  },
+  {
+    "id": 5,
+    "user": "Suresh",
+    "bike": "Bajaj Pulsar NS200",
+    "rating": 3,
+    "review": "Good performance but maintenance is slightly high.",
+    "time": "3 days ago",
+    "avatar": "https://i.pravatar.cc/40?img=15"
+  }
+]
