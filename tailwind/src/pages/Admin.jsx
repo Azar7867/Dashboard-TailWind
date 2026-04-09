@@ -1,16 +1,31 @@
 import { useState, useEffect } from "react";
-import { Trash2, Pencil, Plus, Database, Star } from "lucide-react";
+import { Trash2, Pencil, Plus, Database } from "lucide-react";
+
+/* 🔥 PREMIUM MODAL */
+const ModalWrapper = ({ children }) => (
+  <div className="fixed inset-0 bg-black/60 backdrop-blur-md flex justify-center items-center z-50">
+    <div className="bg-white/80 backdrop-blur-xl p-6 rounded-3xl w-[420px] shadow-2xl border border-white/30 animate-fadeIn">
+      {children}
+    </div>
+  </div>
+);
 
 export default function Admin() {
   const [bikes, setBikes] = useState([]);
   const [reviews, setReviews] = useState([]);
 
-  const [bike, setBike] = useState({});
-  const [review, setReview] = useState({});
+  const [bike, setBike] = useState({ name: "", price: "", image: "" });
+  const [review, setReview] = useState({ user: "", bike: "", review: "" });
 
   const [editBikeId, setEditBikeId] = useState(null);
   const [editReviewId, setEditReviewId] = useState(null);
 
+  const [showBikeModal, setShowBikeModal] = useState(false);
+  const [showReviewModal, setShowReviewModal] = useState(false);
+
+  const [bikeErrors, setBikeErrors] = useState({});
+
+  // ================= FETCH =================
   const fetchData = async () => {
     try {
       const bikeRes = await fetch("http://localhost:5000/api/bikes");
@@ -19,7 +34,7 @@ export default function Admin() {
       setBikes(await bikeRes.json());
       setReviews(await reviewRes.json());
     } catch (err) {
-      console.error("Failed to fetch data:", err);
+      console.error(err);
     }
   };
 
@@ -27,195 +42,313 @@ export default function Admin() {
     fetchData();
   }, []);
 
-  const handleBikeSubmit = async (e) => {
-    e.preventDefault();
-    if (editBikeId) {
-      await fetch(`http://localhost:5000/api/bikes/${editBikeId}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(bike),
-      });
-      setEditBikeId(null);
-    } else {
-      await fetch("http://localhost:5000/api/bikes", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(bike),
-      });
-    }
-    setBike({});
-    fetchData();
+  // ================= VALIDATION =================
+  const validateBike = () => {
+    let errors = {};
+    if (!bike.name.trim()) errors.name = "Bike name required";
+    if (!bike.price) errors.price = "Price required";
+    if (!bike.image.trim()) errors.image = "Image required";
+
+    setBikeErrors(errors);
+    return Object.keys(errors).length === 0;
   };
 
-  const handleReviewSubmit = async (e) => {
-    e.preventDefault();
-    if (editReviewId) {
-      await fetch(`http://localhost:5000/api/reviews/${editReviewId}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(review),
-      });
-      setEditReviewId(null);
-    } else {
-      await fetch("http://localhost:5000/api/reviews", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(review),
-      });
-    }
-    setReview({});
+  // ================= BIKE =================
+  const handleBikeSubmit = async () => {
+    if (!validateBike()) return;
+
+    const url = editBikeId
+      ? `http://localhost:5000/api/bikes/${editBikeId}`
+      : "http://localhost:5000/api/bikes";
+
+    const method = editBikeId ? "PUT" : "POST";
+
+    await fetch(url, {
+      method,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(bike),
+    });
+
+    setBike({ name: "", price: "", image: "" });
+    setEditBikeId(null);
+    setShowBikeModal(false);
+    setBikeErrors({});
     fetchData();
   };
 
   const deleteBike = async (id) => {
-    if (confirm("Are you sure you want to delete this bike?")) {
-      await fetch(`http://localhost:5000/api/bikes/${id}`, { method: "DELETE" });
-      fetchData();
-    }
-  };
-
-  const deleteReview = async (id) => {
-    if (confirm("Are you sure you want to delete this review?")) {
-      await fetch(`http://localhost:5000/api/reviews/${id}`, { method: "DELETE" });
-      fetchData();
-    }
+    await fetch(`http://localhost:5000/api/bikes/${id}`, {
+      method: "DELETE",
+    });
+    fetchData();
   };
 
   const handleEditBike = (b) => {
-    setBike({
-      name: b.name,
-      price: b.price,
-      insurance: b.insurance,
-      tax: b.tax,
-      onroad: b.onroad,
-      image: b.image,
-    });
+    setBike({ name: b.name, price: b.price, image: b.image });
     setEditBikeId(b._id);
+    setShowBikeModal(true);
+  };
+
+  // ================= REVIEW =================
+  const handleReviewSubmit = async () => {
+    const url = editReviewId
+      ? `http://localhost:5000/api/reviews/${editReviewId}`
+      : "http://localhost:5000/api/reviews";
+
+    const method = editReviewId ? "PUT" : "POST";
+
+    const res = await fetch(url, {
+      method,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(review),
+    });
+
+    const data = await res.json();
+
+    setReviews((prev) =>
+      editReviewId
+        ? prev.map((r) => (r._id === editReviewId ? data : r))
+        : [...prev, data]
+    );
+
+    setReview({ user: "", bike: "", review: "" });
+    setEditReviewId(null);
+    setShowReviewModal(false);
+  };
+
+  const deleteReview = async (id) => {
+    await fetch(`http://localhost:5000/api/reviews/${id}`, {
+      method: "DELETE",
+    });
+    fetchData();
   };
 
   const handleEditReview = (r) => {
     setReview(r);
     setEditReviewId(r._id);
+    setShowReviewModal(true);
   };
 
   return (
-    <div className="space-y-8 pb-10">
-      <div className="flex items-center gap-4">
-        <div className="w-12 h-12 bg-slate-900 text-white rounded-2xl flex items-center justify-center shadow-lg">
+    <div className="min-h-screen bg-gradient-to-br from-gray-100 via-white to-gray-200 p-6">
+
+      {/* HEADER */}
+      <div className="flex items-center gap-4 mb-10">
+        <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-4 rounded-2xl text-white shadow-lg">
           <Database size={24} />
         </div>
         <div>
-          <h1 className="text-3xl font-bold text-slate-900 tracking-tight">Admin Control Center</h1>
-          <p className="text-slate-500 font-medium">Manage database records and user interactions.</p>
+          <h1 className="text-3xl font-bold text-gray-800">
+            Admin Dashboard
+          </h1>
+          <p className="text-sm text-gray-500">
+            Manage bikes & reviews easily
+          </p>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* BIKE MANAGEMENT */}
-        <div className="space-y-6">
-          <form onSubmit={handleBikeSubmit} className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 space-y-4">
-            <h2 className="text-xl font-bold text-slate-800 flex items-center gap-2 mb-2">
-              <Plus size={20} className="text-blue-500" />
-              {editBikeId ? "Edit Bike Details" : "Register New Bike"}
-            </h2>
+      <div className="grid md:grid-cols-2 gap-6">
 
-            <div className="space-y-4">
-              <input value={bike.name || ""} className="input" placeholder="Model Name (e.g. Yamaha R1)"
-                onChange={(e)=>setBike({...bike,name:e.target.value})} required/>
-              
-              <div className="grid grid-cols-2 gap-4">
-                <input value={bike.price || ""} className="input" placeholder="Price"
-                  onChange={(e)=>setBike({...bike,price:e.target.value})} required/>
-                <input value={bike.onroad || ""} className="input" placeholder="On-Road"
-                  onChange={(e)=>setBike({...bike,onroad:e.target.value})} />
+        {/* ================= BIKES ================= */}
+        <div className="bg-white/70 backdrop-blur-xl rounded-3xl p-6 shadow-xl border border-white/40">
+          <div className="flex justify-between mb-4">
+            <h2 className="font-semibold text-lg">Bikes ({bikes.length})</h2>
+
+            <button
+              onClick={() => {
+                setBike({ name: "", price: "", image: "" });
+                setEditBikeId(null);
+                setShowBikeModal(true);
+              }}
+              className="flex items-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-4 py-2 rounded-xl shadow-md hover:scale-105 transition"
+            >
+              <Plus size={16} /> Add
+            </button>
+          </div>
+
+          {bikes.map((b) => (
+            <div
+              key={b._id}
+              className="flex justify-between items-center py-3 px-2 rounded-xl hover:bg-white/60 transition"
+            >
+              <div className="flex gap-3 items-center">
+                <img
+                  src={b.image}
+                  className="w-14 h-14 rounded-xl object-cover shadow-md"
+                />
+                <div>
+                  <p className="font-semibold">{b.name}</p>
+                  <p className="text-sm text-gray-500">₹{b.price}</p>
+                </div>
               </div>
 
-              <input value={bike.image || ""} className="input" placeholder="Image URL"
-                onChange={(e)=>setBike({...bike,image:e.target.value})} />
+              <div className="flex gap-3">
+                <button onClick={() => handleEditBike(b)}>
+                  <Pencil size={18} />
+                </button>
+                <button onClick={() => deleteBike(b._id)}>
+                  <Trash2 size={18} className="text-red-500" />
+                </button>
+              </div>
             </div>
-
-            <button className={`${editBikeId ? "bg-amber-500 hover:bg-amber-600 shadow-amber-200" : "bg-blue-600 hover:bg-blue-700 shadow-blue-200"} text-white w-full py-3 rounded-xl font-bold transition-all shadow-lg mt-2`}>
-              {editBikeId ? "Save Changes" : "Create Record"}
-            </button>
-          </form>
-
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-            <div className="p-5 border-b border-gray-50 bg-slate-50/50">
-              <h2 className="font-bold text-slate-800">Existing Inventory ({bikes.length})</h2>
-            </div>
-            <div className="max-h-[400px] overflow-y-auto custom-scrollbar">
-              {bikes.map((b) => (
-                <div key={b._id} className="flex justify-between items-center p-4 border-b border-slate-50 hover:bg-slate-50/50 transition-colors group">
-                  <div className="flex items-center gap-3">
-                    {b.image && <img src={b.image} className="w-10 h-10 rounded-lg object-cover" alt="" />}
-                    <div>
-                      <p className="font-bold text-slate-800 text-sm">{b.name}</p>
-                      <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">{b.price}</p>
-                    </div>
-                  </div>
-
-                  <div className="flex gap-2">
-                    <button onClick={()=>handleEditBike(b)} className="p-2 text-amber-500 hover:bg-amber-50 rounded-lg transition-colors">
-                      <Pencil size={18}/>
-                    </button>
-                    <button onClick={()=>deleteBike(b._id)} className="p-2 text-rose-500 hover:bg-rose-50 rounded-lg transition-colors">
-                      <Trash2 size={18}/>
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+          ))}
         </div>
 
-        {/* REVIEW MANAGEMENT */}
-        <div className="space-y-6">
-          <form onSubmit={handleReviewSubmit} className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 space-y-4">
-            <h2 className="text-xl font-bold text-slate-800 flex items-center gap-2 mb-2">
-              <Star size={20} className="text-amber-500" />
-              {editReviewId ? "Moderate Review" : "Post Manual Review"}
-            </h2>
+        {/* ================= REVIEWS ================= */}
+        <div className="bg-white/70 backdrop-blur-xl rounded-3xl p-6 shadow-xl border border-white/40">
+          <div className="flex justify-between mb-4">
+            <h2 className="font-semibold text-lg">Reviews ({reviews.length})</h2>
 
-            <div className="space-y-4">
-              <input value={review.user || ""} className="input" placeholder="User Name"
-                onChange={(e)=>setReview({...review,user:e.target.value})} required/>
-              <input value={review.bike || ""} className="input" placeholder="Bike Associated"
-                onChange={(e)=>setReview({...review,bike:e.target.value})} required/>
-              <textarea value={review.review || ""} className="input min-h-[100px]" placeholder="Review text content..."
-                onChange={(e)=>setReview({...review,review:e.target.value})} required/>
-            </div>
-
-            <button className={`${editReviewId ? "bg-emerald-600 hover:bg-emerald-700 shadow-emerald-200" : "bg-slate-900 hover:bg-black shadow-slate-200"} text-white w-full py-3 rounded-xl font-bold transition-all shadow-lg mt-2`}>
-              {editReviewId ? "Update Review" : "Publish Review"}
+            <button
+              onClick={() => {
+                setReview({ user: "", bike: "", review: "" });
+                setEditReviewId(null);
+                setShowReviewModal(true);
+              }}
+              className="flex items-center gap-2 bg-gradient-to-r from-pink-500 to-rose-500 text-white px-4 py-2 rounded-xl shadow-md hover:scale-105 transition"
+            >
+              <Plus size={16} /> Add
             </button>
-          </form>
-
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-            <div className="p-5 border-b border-gray-50 bg-slate-50/50">
-              <h2 className="font-bold text-slate-800">Member Reviews ({reviews.length})</h2>
-            </div>
-            <div className="max-h-[400px] overflow-y-auto custom-scrollbar">
-              {reviews.map((r) => (
-                <div key={r._id} className="flex justify-between items-center p-4 border-b border-slate-50 hover:bg-slate-50/50 transition-colors">
-                  <div className="min-w-0 pr-4">
-                    <p className="font-bold text-slate-800 text-sm truncate">{r.user}</p>
-                    <p className="text-xs text-blue-600 font-medium">on {r.bike}</p>
-                  </div>
-
-                  <div className="flex gap-2 flex-shrink-0">
-                    <button onClick={()=>handleEditReview(r)} className="p-2 text-amber-500 hover:bg-amber-50 rounded-lg transition-colors">
-                      <Pencil size={18}/>
-                    </button>
-                    <button onClick={()=>deleteReview(r._id)} className="p-2 text-rose-500 hover:bg-rose-50 rounded-lg transition-colors">
-                      <Trash2 size={18}/>
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
           </div>
+
+          {reviews.map((r) => (
+            <div
+              key={r._id}
+              className="flex justify-between py-3 px-2 rounded-xl hover:bg-white/60 transition"
+            >
+              <div>
+                <p className="font-semibold">{r.user}</p>
+                <p className="text-sm text-blue-500">{r.bike}</p>
+                <p className="text-sm text-gray-600 mt-1">{r.review}</p>
+              </div>
+
+              <div className="flex gap-3">
+                <button onClick={() => handleEditReview(r)}>
+                  <Pencil size={18} />
+                </button>
+                <button onClick={() => deleteReview(r._id)}>
+                  <Trash2 size={18} className="text-red-500" />
+                </button>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
+
+      {/* ================= BIKE MODAL ================= */}
+      {showBikeModal && (
+        <ModalWrapper>
+          <h2 className="text-xl font-bold mb-4">
+            {editBikeId ? "Edit Bike" : "Add Bike"}
+          </h2>
+
+          <div className="space-y-4">
+
+            <div>
+              <label className="text-sm text-gray-600">Bike Name</label>
+              <input
+                value={bike.name}
+                onChange={(e) =>
+                  setBike((prev) => ({ ...prev, name: e.target.value }))
+                }
+                className="w-full mt-1 px-4 py-2 rounded-xl border bg-white/70 focus:ring-2 focus:ring-blue-500 outline-none"
+              />
+              {bikeErrors.name && <p className="text-red-500 text-xs">{bikeErrors.name}</p>}
+            </div>
+
+            <div>
+              <label className="text-sm text-gray-600">Price</label>
+              <input
+                value={bike.price}
+                onChange={(e) => {
+                  if (/^\d*$/.test(e.target.value)) {
+                    setBike((prev) => ({ ...prev, price: e.target.value }));
+                  }
+                }}
+                className="w-full mt-1 px-4 py-2 rounded-xl border bg-white/70 focus:ring-2 focus:ring-blue-500 outline-none"
+              />
+              {bikeErrors.price && <p className="text-red-500 text-xs">{bikeErrors.price}</p>}
+            </div>
+
+            <div>
+              <label className="text-sm text-gray-600">Image URL</label>
+              <input
+                value={bike.image}
+                onChange={(e) =>
+                  setBike((prev) => ({ ...prev, image: e.target.value }))
+                }
+                className="w-full mt-1 px-4 py-2 rounded-xl border bg-white/70 focus:ring-2 focus:ring-blue-500 outline-none"
+              />
+              {bikeErrors.image && <p className="text-red-500 text-xs">{bikeErrors.image}</p>}
+            </div>
+
+            <div className="flex justify-end gap-3 pt-3">
+              <button onClick={() => setShowBikeModal(false)} className="text-gray-500">
+                Cancel
+              </button>
+
+              <button
+                onClick={handleBikeSubmit}
+                className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-2 rounded-xl shadow-lg hover:scale-105 transition"
+              >
+                Save
+              </button>
+            </div>
+          </div>
+        </ModalWrapper>
+      )}
+
+      {/* ================= REVIEW MODAL ================= */}
+      {showReviewModal && (
+        <ModalWrapper>
+          <h2 className="text-xl font-bold mb-4">
+            {editReviewId ? "Edit Review" : "Add Review"}
+          </h2>
+
+          <div className="space-y-4">
+
+            <input
+              placeholder="User Name"
+              value={review.user}
+              onChange={(e) =>
+                setReview((prev) => ({ ...prev, user: e.target.value }))
+              }
+              className="w-full px-4 py-2 rounded-xl border bg-white/70 focus:ring-2 focus:ring-pink-500 outline-none"
+            />
+
+            <input
+              placeholder="Bike Name"
+              value={review.bike}
+              onChange={(e) =>
+                setReview((prev) => ({ ...prev, bike: e.target.value }))
+              }
+              className="w-full px-4 py-2 rounded-xl border bg-white/70 focus:ring-2 focus:ring-pink-500 outline-none"
+            />
+
+            <textarea
+              placeholder="Review"
+              value={review.review}
+              onChange={(e) =>
+                setReview((prev) => ({ ...prev, review: e.target.value }))
+              }
+              className="w-full px-4 py-2 rounded-xl border bg-white/70 focus:ring-2 focus:ring-pink-500 outline-none"
+            />
+
+            <div className="flex justify-end gap-3 pt-3">
+              <button onClick={() => setShowReviewModal(false)} className="text-gray-500">
+                Cancel
+              </button>
+
+              <button
+                onClick={handleReviewSubmit}
+                className="bg-gradient-to-r from-pink-500 to-rose-500 text-white px-6 py-2 rounded-xl shadow-lg hover:scale-105 transition"
+              >
+                Save
+              </button>
+            </div>
+          </div>
+        </ModalWrapper>
+      )}
     </div>
   );
 }
