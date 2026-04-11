@@ -1,32 +1,69 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-export default function Login() {
+export default function Login({ setIsAuth }) {
   const navigate = useNavigate();
 
   const [form, setForm] = useState({ email: "", password: "" });
   const [errors, setErrors] = useState({});
 
-  const validate = () => {
-    let err = {};
+const validate = () => {
+  let err = {};
 
-    if (!form.email) {
-      err.email = "Email is required";
-    } else if (!/\S+@\S+\.\S+/.test(form.email)) {
-      err.email = "Invalid email format";
-    }
+  // Email validation
+  if (!form.email) {
+    err.email = "Email is required";
+  } else if (!/\S+@\S+\.\S+/.test(form.email)) {
+    err.email = "Invalid email format";
+  }
 
-    if (!form.password) {
-      err.password = "Password is required";
-    }
+  // Password validation
+  if (!form.password) {
+    err.password = "Password is required";
+  } else if (form.password.length < 6) {
+    err.password = "Password must be at least 6 characters";
+  } else if (!/[!@#$%^&*(),.?":{}|<>]/.test(form.password)) {
+    err.password = "Password must contain at least 1 special character";
+  }
 
-    setErrors(err);
-    return Object.keys(err).length === 0;
-  };
+  setErrors(err);
+  return Object.keys(err).length === 0;
+};
 
-  const handleLogin = async () => {
-    if (!validate()) return;
+  // const handleLogin = async () => {
+  //    e.preventDefault();
 
+  // localStorage.setItem("token", "user_logged_in");
+
+  // setIsAuth(true); // 🔥 THIS IS IMPORTANT
+
+  // navigate("/");
+  //   if (!validate()) return;
+
+  //   const res = await fetch("http://localhost:5000/api/auth/login", {
+  //     method: "POST",
+  //     headers: { "Content-Type": "application/json" },
+  //     body: JSON.stringify(form),
+      
+  //   });
+
+  //   const data = await res.json();
+
+  //   if (data.token) {
+  //     localStorage.setItem("token", data.token);
+  //     navigate("/");
+  //   } else {
+  //     alert(data.message);
+  //   }
+  // };
+
+  const handleLogin = async (e) => {
+  e.preventDefault(); // ✅ FIX
+
+  // ✅ First validate
+  if (!validate()) return;
+
+  try {
     const res = await fetch("http://localhost:5000/api/auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -36,12 +73,17 @@ export default function Login() {
     const data = await res.json();
 
     if (data.token) {
-      localStorage.setItem("token", data.token);
-      navigate("/");
+      localStorage.setItem("token", "user_logged_in");
+setIsAuth(true);
+navigate("/");
     } else {
-      alert(data.message);
+      alert(data.message || "Login failed");
     }
-  };
+  } catch (error) {
+    console.error(error);
+    alert("Server error");
+  }
+};
 
   return (
     <div className="h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 via-white to-indigo-200">
@@ -91,12 +133,14 @@ export default function Login() {
         </div>
 
         {/* BUTTON */}
+        <form onSubmit={handleLogin}>
         <button
-          onClick={handleLogin}
-          className="w-full mt-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-2 rounded-xl shadow-lg hover:scale-105 transition"
-        >
-          Login
-        </button>
+  type="submit"
+  className="w-full mt-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-2 rounded-xl shadow-lg hover:scale-105 transition"
+>
+  Login
+</button>
+</form>
 
         <p className="text-sm mt-4 text-center">
           Don't have an account?{" "}

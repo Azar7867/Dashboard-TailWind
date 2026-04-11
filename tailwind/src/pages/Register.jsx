@@ -8,6 +8,7 @@ export default function Register() {
     name: "",
     email: "",
     password: "",
+    confirmPassword: "",
   });
 
   const [errors, setErrors] = useState({});
@@ -15,18 +16,34 @@ export default function Register() {
   const validate = () => {
     let err = {};
 
-    if (!form.name) err.name = "Name is required";
+    // Name validation (only letters)
+    if (!form.name) {
+      err.name = "Name is required";
+    } else if (!/^[A-Za-z\s]+$/.test(form.name)) {
+      err.name = "Name should contain only letters";
+    }
 
+    // Email validation
     if (!form.email) {
       err.email = "Email is required";
     } else if (!/\S+@\S+\.\S+/.test(form.email)) {
       err.email = "Invalid email format";
     }
 
+    // Password validation
     if (!form.password) {
       err.password = "Password is required";
     } else if (form.password.length < 6) {
-      err.password = "Minimum 6 characters";
+      err.password = "Minimum 6 characters required";
+    } else if (!/[!@#$%^&*(),.?":{}|<>]/.test(form.password)) {
+      err.password = "Must include 1 special character";
+    }
+
+    // Confirm Password validation
+    if (!form.confirmPassword) {
+      err.confirmPassword = "Confirm your password";
+    } else if (form.password !== form.confirmPassword) {
+      err.confirmPassword = "Passwords do not match";
     }
 
     setErrors(err);
@@ -39,7 +56,11 @@ export default function Register() {
     const res = await fetch("http://localhost:5000/api/auth/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(form),
+      body: JSON.stringify({
+        name: form.name,
+        email: form.email,
+        password: form.password,
+      }),
     });
 
     const data = await res.json();
@@ -50,26 +71,28 @@ export default function Register() {
 
   return (
     <div className="h-screen flex items-center justify-center bg-gradient-to-br from-pink-100 via-white to-purple-200">
-
       <div className="bg-white/80 backdrop-blur-xl p-8 rounded-3xl shadow-2xl w-[360px] border border-white/40">
-
+        
         <h2 className="text-2xl font-bold mb-6 text-gray-800 text-center">
           Register
         </h2>
 
         {/* NAME */}
         <div className="mb-4">
-          <label className="text-sm font-medium text-gray-600">
-            Name
-          </label>
+          <label className="text-sm font-medium text-gray-600">Name</label>
           <input
-            value={form.name}
-            onChange={(e) =>
-              setForm({ ...form, name: e.target.value })
-            }
-            className="w-full mt-1 px-4 py-2 rounded-xl border bg-white/70 focus:ring-2 focus:ring-pink-500 outline-none"
-            placeholder="Enter your name"
-          />
+  value={form.name}
+  onChange={(e) => {
+    const value = e.target.value;
+
+    // Allow only letters and spaces
+    if (/^[A-Za-z\s]*$/.test(value)) {
+      setForm({ ...form, name: value });
+    }
+  }}
+  className="w-full mt-1 px-4 py-2 rounded-xl border bg-white/70 focus:ring-2 focus:ring-pink-500 outline-none"
+  placeholder="Enter your name"
+/>
           {errors.name && (
             <p className="text-red-500 text-xs mt-1">{errors.name}</p>
           )}
@@ -77,9 +100,7 @@ export default function Register() {
 
         {/* EMAIL */}
         <div className="mb-4">
-          <label className="text-sm font-medium text-gray-600">
-            Email
-          </label>
+          <label className="text-sm font-medium text-gray-600">Email</label>
           <input
             value={form.email}
             onChange={(e) =>
@@ -95,9 +116,7 @@ export default function Register() {
 
         {/* PASSWORD */}
         <div className="mb-4">
-          <label className="text-sm font-medium text-gray-600">
-            Password
-          </label>
+          <label className="text-sm font-medium text-gray-600">Password</label>
           <input
             type="password"
             value={form.password}
@@ -109,6 +128,27 @@ export default function Register() {
           />
           {errors.password && (
             <p className="text-red-500 text-xs mt-1">{errors.password}</p>
+          )}
+        </div>
+
+        {/* CONFIRM PASSWORD */}
+        <div className="mb-4">
+          <label className="text-sm font-medium text-gray-600">
+            Confirm Password
+          </label>
+          <input
+            type="password"
+            value={form.confirmPassword}
+            onChange={(e) =>
+              setForm({ ...form, confirmPassword: e.target.value })
+            }
+            className="w-full mt-1 px-4 py-2 rounded-xl border bg-white/70 focus:ring-2 focus:ring-pink-500 outline-none"
+            placeholder="Re-enter password"
+          />
+          {errors.confirmPassword && (
+            <p className="text-red-500 text-xs mt-1">
+              {errors.confirmPassword}
+            </p>
           )}
         </div>
 

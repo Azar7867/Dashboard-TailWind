@@ -44,7 +44,7 @@
 import { Menu, Search } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-export default function Header({ toggleSidebar }) {
+export default function Header({ toggleSidebar, setIsAuth }) {
   const navigate = useNavigate();
 
   return (
@@ -87,6 +87,15 @@ export default function Header({ toggleSidebar }) {
         >
           Login
         </button>
+        <button
+  onClick={() => {
+    localStorage.removeItem("token");
+    window.location.href = "/login"; // 💥 FORCE RELOAD
+  }}
+  className="bg-gradient-to-r from-red-500 to-pink-500 text-white px-4 py-2 rounded-xl shadow hover:scale-105 transition"
+>
+  Logout
+</button>
 
         {/* USER PROFILE (UNCHANGED) */}
         <div className="flex items-center gap-2 hover:bg-gray-50 p-1.5 rounded-xl cursor-pointer transition-colors border border-transparent hover:border-gray-200">

@@ -7,28 +7,68 @@ const router = express.Router();
 
 // REGISTER
 router.post("/register", async (req, res) => {
-  const { name, email, password } = req.body;
+  try {
+    if (!req.body) {
+      return res.status(400).json({ message: "Body is missing" });
+    }
 
-  const hash = await bcrypt.hash(password, 10);
+    const { name, email, password } = req.body;
 
-  await User.create({ name, email, password: hash });
+    if (!name || !email || !password) {
+      return res.status(400).json({ message: "All fields required" });
+    }
 
-  res.json({ message: "User registered" });
+    const hash = await bcrypt.hash(password, 10);
+
+    await User.create({ name, email, password: hash });
+
+    res.status(201).json({ message: "User registered" });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
 });
 
 // LOGIN
 router.post("/login", async (req, res) => {
-  const { email, password } = req.body;
+  try {
+    if (!req.body) {
+      return res.status(400).json({ message: "Body is missing" });
+    }
 
-  const user = await User.findOne({ email });
-  if (!user) return res.json({ message: "User not found" });
+    const { email, password } = req.body;
 
-  const isMatch = await bcrypt.compare(password, user.password);
-  if (!isMatch) return res.json({ message: "Wrong password" });
+    if (!email || !password) {
+      return res.status(400).json({ message: "Email & Password required" });
+    }
 
-  const token = jwt.sign({ id: user._id }, "SECRET_KEY");
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
 
-  res.json({ token });
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ message: "Wrong password" });
+    }
+
+    const token = jwt.sign(
+      { id: user._id },
+      process.env.JWT_SECRET || "SECRET_KEY",
+      { expiresIn: "1d" }
+    );
+
+    res.json({ message: "Login successful", token });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
 });
+router.get("/users", async (req, res) => {
+  try {
+    const users = await User.find().select("-password"); // 🔐 hide password
 
+    res.json(users);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
 export default router;
