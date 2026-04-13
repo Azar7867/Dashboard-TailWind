@@ -81,12 +81,12 @@ export default function Header({ toggleSidebar, setIsAuth }) {
         </div>
 
         {/* LOGIN BUTTON */}
-        <button
+        {/* <button
           onClick={() => navigate("/login")}
           className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-4 py-2 rounded-xl shadow hover:scale-105 transition"
         >
           Login
-        </button>
+        </button> */}
         <button
   onClick={() => {
     localStorage.removeItem("token");

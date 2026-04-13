@@ -73,9 +73,14 @@ const validate = () => {
     const data = await res.json();
 
     if (data.token) {
-      localStorage.setItem("token", "user_logged_in");
-setIsAuth(true);
-navigate("/");
+      // ✅ Store token
+      localStorage.setItem("token", data.token);
+
+      // ✅ Update auth state
+      setIsAuth(true);
+
+      // ✅ Redirect
+      navigate("/");
     } else {
       alert(data.message || "Login failed");
     }
