@@ -5,6 +5,7 @@ import connectDB from "./config/db.js";
 import authRoutes from "./routes/auth.js";
 import bikeRoutes from "./routes/bikeRoutes.js";
 import reviewRoutes from "./routes/reviewRoutes.js";
+import { verifyToken } from "./middleware/authMiddleware.js";
 
 dotenv.config();
 connectDB();
@@ -15,6 +16,9 @@ app.use(cors());
 app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/bikes", bikeRoutes);
+// app.get("/api/bikes", verifyToken, (req, res) => {
+//   res.json(bikes);
+// });
 app.use("/api/reviews", reviewRoutes);
 // fetch("http://localhost:5000/api/bikes")
 app.get("/", (req, res) => {

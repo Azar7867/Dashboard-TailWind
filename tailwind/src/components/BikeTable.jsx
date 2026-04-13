@@ -3,12 +3,39 @@ import { useEffect, useState } from "react";
 export default function BikeTable() {
   const [bikes, setBikes] = useState([]);
 
+  // useEffect(() => {
+  //   fetch("http://localhost:5000/api/bikes")
+  //     .then((res) => res.json())
+  //     .then((data) => setBikes(data))
+  //     .catch(err => console.error("Failed to fetch bikes:", err));
+  // }, []);
+
   useEffect(() => {
-    fetch("http://localhost:5000/api/bikes")
-      .then((res) => res.json())
-      .then((data) => setBikes(data))
-      .catch(err => console.error("Failed to fetch bikes:", err));
-  }, []);
+  const token = localStorage.getItem("token");
+
+  fetch("http://localhost:5000/api/bikes", {
+  headers: {
+    Authorization: `Bearer ${localStorage.getItem("token")}`,
+  },
+
+  })
+    .then((res) => {
+      // if (res.status === 401) {
+      //   throw new Error("Unauthorized");
+      // }
+      if (res.status === 401) {
+  localStorage.removeItem("token");
+  alert("Session expired");
+  window.location.href = "/login";
+}
+      return res.json();
+    })
+    .then((data) => setBikes(data))
+    .catch((err) => {
+      console.error("Failed to fetch bikes:", err);
+      alert("Unauthorized! Please login again");
+    });
+}, []);
 
   return (
     <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
@@ -44,7 +71,7 @@ export default function BikeTable() {
           <tbody className="divide-y divide-slate-50">
             {bikes.map((bike) => (
               <tr
-                key={bike.id}
+                key={bike._id}
                 className="group hover:bg-slate-50/50 transition-colors"
               >
                 <td className="py-4">
@@ -84,4 +111,4 @@ export default function BikeTable() {
       </div>
     </div>
   );
-}
+}

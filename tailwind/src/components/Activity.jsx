@@ -4,12 +4,45 @@ import { MessageSquare, Star } from "lucide-react";
 export default function Activity() {
   const [reviews, setReviews] = useState([]);
 
+  // useEffect(() => {
+  //   fetch("http://localhost:5000/api/reviews")
+  //     .then((res) => res.json())
+  //     .then((data) => setReviews(data))
+  //     .catch(err => console.error("Failed to fetch reviews:", err));
+  // }, []);
+
   useEffect(() => {
-    fetch("http://localhost:5000/api/reviews")
-      .then((res) => res.json())
-      .then((data) => setReviews(data))
-      .catch(err => console.error("Failed to fetch reviews:", err));
-  }, []);
+  const token = localStorage.getItem("token");
+
+  // ❌ No token → redirect
+  if (!token) {
+    alert("Please login first");
+    window.location.href = "/login";
+    return;
+  }
+
+  fetch("http://localhost:5000/api/reviews", {
+    headers: {
+      Authorization: `Bearer ${token}`, // 🔐 send token
+    },
+  })
+    .then((res) => {
+      if (res.status === 401) {
+        // 🔥 Token expired or invalid
+        localStorage.removeItem("token");
+        alert("Session expired. Please login again");
+        window.location.href = "/login";
+        return;
+      }
+      return res.json();
+    })
+    .then((data) => {
+      if (data) setReviews(data);
+    })
+    .catch((err) =>
+      console.error("Failed to fetch reviews:", err)
+    );
+}, []);
 
   return (
     <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col h-full">
@@ -30,7 +63,7 @@ export default function Activity() {
       {/* Reviews */}
       <div className="space-y-6 overflow-y-auto max-h-[400px] pr-2 custom-scrollbar">
         {reviews.map((item) => (
-          <div key={item.id} className="flex gap-4 group cursor-default">
+          <div key={item._id} className="flex gap-4 group cursor-default">
             
             {/* Avatar */}
             <div className="relative flex-shrink-0">
@@ -78,4 +111,4 @@ export default function Activity() {
       </div>
     </div>
   );
-}
+}

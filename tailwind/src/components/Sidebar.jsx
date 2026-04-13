@@ -17,7 +17,7 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
     { name: "Projects", icon: Folder, path: "/projects" },
     { name: "Settings", icon: Settings, path: "/settings" },
     { name: "Help", icon: HelpCircle, path: "/help" },
-    { name: "Admin", icon: Settings, path: "/admin" }
+    // { name: "Admin", icon: Settings, path: "/admin-login" }
   ];
 
   return (
@@ -67,4 +67,4 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
       </nav>
     </div>
   );
-}
+}

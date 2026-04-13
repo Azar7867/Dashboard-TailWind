@@ -19,6 +19,9 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import AppRoutes from "./routes/AppRoutes";
 import Login from "./pages/Login";
+import AdminLogin from "./pages/AdminLogin";
+import AdminProtectedRoute from "./routes/AdminProtectedRoute";
+import Admin from "./pages/Admin";
 import Register from "./pages/Register";
 
 export default function App() {
@@ -42,9 +45,18 @@ export default function App() {
             isAuth ? <Navigate to="/" /> : <Login setIsAuth={setIsAuth} />
           }
         />
+        <Route
+          path="/admin"
+          element={
+            <AdminProtectedRoute>
+              <Admin />
+            </AdminProtectedRoute>
+          }
+        />
 
         {/* REGISTER */}
         <Route path="/register" element={<Register />} />
+        <Route path="/admin-login" element={<AdminLogin />} />
 
         {/* PROTECTED */}
         <Route

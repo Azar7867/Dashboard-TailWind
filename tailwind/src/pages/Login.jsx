@@ -156,6 +156,15 @@ const validate = () => {
             Register
           </span>
         </p>
+        <p className="text-sm mt-2 text-center">
+  Admin access?{" "}
+  <span
+    onClick={() => navigate("/admin-login")}
+    className="text-indigo-600 cursor-pointer font-medium hover:underline"
+  >
+    Admin Login
+  </span>
+</p>
       </div>
     </div>
   );
