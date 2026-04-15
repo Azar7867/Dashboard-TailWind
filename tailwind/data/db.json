@@ -1,0 +1,45 @@
+{
+  "tasks": [
+    {
+      "id": "1",
+      "title": "Design HR Dashboard",
+      "description": "Create wireframes for the leave request module",
+      "status": "completed",
+      "priority": "Medium",
+      "dueDate": "2023-11-20"
+    },
+    {
+      "id": "2",
+      "title": "API Integration",
+      "description": "Connect backend APIs with the frontend auth",
+      "status": "in-progress",
+      "priority": "High",
+      "dueDate": "2023-11-21"
+    },
+    {
+      "id": "3",
+      "title": "Fix Navigation Bug",
+      "description": "Sidebar does not collapse on mobile",
+      "status": "completed",
+      "priority": "Low",
+      "dueDate": "2023-11-18"
+    },
+    {
+      "title": "Developer",
+      "description": "To fix the bug in the ui",
+      "priority": "Low",
+      "dueDate": "2026-04-16",
+      "status": "in-progress",
+      "id": "hPd2BpL8h9I"
+    },
+    {
+      "title": "ui",
+      "description": "Fix bug",
+      "priority": "Medium",
+      "dueDate": "",
+      "status": "completed",
+      "id": "-LwtifoHhpU"
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
+}

@@ -1,4 +1,16 @@
-@import "tailwindcss";
+
+/* Import OTF font */
+@font-face {
+  font-family: "MyFont";
+  src: url("./assets/al.ttf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+/* Apply to whole app */
+body {
+  font-family: "MyFont";
+}@import "tailwindcss";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

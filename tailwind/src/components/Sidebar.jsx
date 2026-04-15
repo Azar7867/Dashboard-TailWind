@@ -15,6 +15,7 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
     { name: "Analytics", icon: BarChart3, path: "/analytics" },
     { name: "Team", icon: Users, path: "/team" },
     { name: "Projects", icon: Folder, path: "/projects" },
+    { name: "Tasks", icon: LayoutDashboard, path: "/tasks" },
     { name: "Settings", icon: Settings, path: "/settings" },
     { name: "Help", icon: HelpCircle, path: "/help" },
     // { name: "Admin", icon: Settings, path: "/admin-login" }

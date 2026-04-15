@@ -1,12 +1,14 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
+import { useLocation} from "react-router-dom";
 export default function Login({ setIsAuth }) {
   const navigate = useNavigate();
 
   const [form, setForm] = useState({ email: "", password: "" });
   const [errors, setErrors] = useState({});
+const location = useLocation();
 
+const from = location.state?.from?.pathname || "/";
 const validate = () => {
   let err = {};
 
