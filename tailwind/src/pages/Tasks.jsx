@@ -58,6 +58,21 @@ const closeModal = () => {
     status: "in-progress"
   });
 };
+const toggleStatus = async (task) => {
+  try {
+    const updatedStatus =
+      task.status === "completed" ? "in-progress" : "completed";
+
+    await axios.put(
+      `http://localhost:5000/api/tasks/${task._id}`,
+      { ...task, status: updatedStatus }
+    );
+
+    fetchTasks(); // refresh UI
+  } catch (error) {
+    console.error("Error updating status:", error);
+  }
+};
 const handleSubmit = async (e) => {
   if (e) e.preventDefault(); // ✅ IMPORTANT
 
@@ -191,14 +206,26 @@ const handleSubmit = async (e) => {
           </div>
 
            {task.status === "completed" ? (
-    <div className="w-8 h-8 flex items-center justify-center rounded-full border border-[#BBF7D0] bg-[#F0FDF4]">
-      <CheckCircle size={16} className="text-[#22C55E]" />
-    </div>
-  ) : (
-    <div className="w-8 h-8 flex items-center justify-center rounded-full border border-[#BFDBFE] bg-[#EFF6FF]">
-      <PlayCircle size={16} className="text-[#3B82F6]" />
-    </div>
-  )}
+  <div
+    onClick={(e) => {
+      e.stopPropagation(); // prevent modal open
+      toggleStatus(task);
+    }}
+    className="w-8 h-8 flex items-center justify-center rounded-full border border-[#BBF7D0] bg-[#F0FDF4] cursor-pointer"
+  >
+    <CheckCircle size={16} className="text-[#22C55E]" />
+  </div>
+) : (
+  <div
+    onClick={(e) => {
+      e.stopPropagation(); // prevent modal open
+      toggleStatus(task);
+    }}
+    className="w-8 h-8 flex items-center justify-center rounded-full border border-[#BFDBFE] bg-[#EFF6FF] cursor-pointer"
+  >
+    <PlayCircle size={16} className="text-[#3B82F6]" />
+  </div>
+)}
 
         </div>
       </div>
@@ -270,24 +297,6 @@ const handleSubmit = async (e) => {
               setForm({ ...form, description: e.target.value })
             }
           />
-        </div>
-
-        {/* STATUS */}
-        <div>
-          <label className="text-[14px] font-medium text-[#334155]">
-            Status
-          </label>
-          <select
-            value={form.status}
-            className="mt-2 w-full h-[44px] px-4 rounded-xl 
-                       border border-gray-200 bg-[#F8FAFC]"
-            onChange={(e) =>
-              setForm({ ...form, status: e.target.value })
-            }
-          >
-            <option value="in-progress">In Progress</option>
-            <option value="completed">Completed</option>
-          </select>
         </div>
 
         {/* PRIORITY + DATE */}

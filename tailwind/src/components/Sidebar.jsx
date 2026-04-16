@@ -6,6 +6,9 @@ import {
   Settings,
   HelpCircle,
   X,
+  PlayCircle,
+  CheckCircle,
+  FileText
 } from "lucide-react";
 import { NavLink } from "react-router-dom";
 
@@ -16,6 +19,9 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
     { name: "Team", icon: Users, path: "/team" },
     { name: "Projects", icon: Folder, path: "/projects" },
     { name: "Tasks", icon: LayoutDashboard, path: "/tasks" },
+    { name: "In Progress", icon: PlayCircle, path: "/in-progress" },
+  { name: "Completed", icon: CheckCircle, path: "/completed" },
+  { name: "Blog", icon: FileText, path: "/blog" },
     { name: "Settings", icon: Settings, path: "/settings" },
     { name: "Help", icon: HelpCircle, path: "/help" },
     // { name: "Admin", icon: Settings, path: "/admin-login" }

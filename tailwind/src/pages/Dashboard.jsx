@@ -3,6 +3,7 @@ import RevenueChart from "../components/RevenueChart";
 import TrafficChart from "../components/TrafficChart";
 import BikeTable from "../components/BikeTable";
 import Activity from "../components/Activity";
+import SponsorshipPage from "../components/SponsorshipPage";
 
 export default function Dashboard() {
   return (
@@ -23,14 +24,29 @@ export default function Dashboard() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+      {/* <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
         <div className="xl:col-span-2 overflow-x-auto">
           <BikeTable />
         </div>
         <div>
           <Activity />
         </div>
-      </div>
+      </div> */}
+      {/* BikeTable + Activity */}
+<div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+  <div className="xl:col-span-2 overflow-x-auto">
+    <BikeTable />
+  </div>
+
+  <div>
+    <Activity />
+  </div>
+</div>
+
+{/* ✅ Sponsorship BELOW BOTH */}
+<div>
+  <SponsorshipPage />
+</div>
     </div>
   );
-}
+}
