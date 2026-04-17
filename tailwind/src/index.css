@@ -1,15 +1,4 @@
-
-/* Import OTF font */
-/* @font-face {
-  font-family: "MyFont";
-  src: url("./assets/al.ttf") format("opentype");
-  font-weight: 400;
-  font-style: normal;
-} */
-
-/* Apply to whole app */
 body {
-  font-family: "MyFont";
 }@import "tailwindcss";
 @tailwind base;
 @tailwind components;
@@ -71,4 +60,23 @@ body {
 .input:focus {
   border-color: #6366f1;
   box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+}
+/* Smooth scroll */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  /* background: #3b82f6; */
+  border-radius: 10px;
+  transition: all 0.3s ease;
 }

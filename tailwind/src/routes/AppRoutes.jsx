@@ -12,6 +12,10 @@ import Help from "../pages/Help";
 import Admin from "../pages/Admin";
 import Blog from "../pages/Blog";
 import BlogDetails from "../pages/BlogDetails";
+import Pricing from "../pages/Pricing";
+import AddPlan from "../pages/AddPlan";
+import PaymentPage from "../pages/PaymentPage";
+import PaymentHistory from "../pages/PaymentHistory";
 export default function AppRoutes({ setIsAuth }) {
   return (
     <Routes>
@@ -24,8 +28,12 @@ export default function AppRoutes({ setIsAuth }) {
         <Route path="/completed" element={<CompletedTasks />} />
         <Route path="/in-progress" element={<InProgressTasks />} />
         <Route path="settings" element={<Settings />} />
+        <Route path="payment" element={<PaymentPage />} />
+        <Route path="payment-history" element={<PaymentHistory />} />
         <Route path="help" element={<Help />} />
         <Route path="blog" element={<Blog />} />
+        <Route path="pricing" element={<Pricing />} />
+        <Route path="add-plan" element={<AddPlan />} />
         <Route path="blog/:id" element={<BlogDetails />} />
         <Route path="admin" element={<Admin />} />
       </Route>

@@ -1,44 +1,83 @@
 {
-  "tasks": [
+  "plans": [
     {
       "id": "1",
-      "title": "Design HR Dashboard",
-      "description": "Create wireframes for the leave request module",
-      "status": "completed",
-      "priority": "Medium",
-      "dueDate": "2023-11-20"
+      "name": "Basic",
+      "price": 499,
+      "desc": "Perfect for beginners starting with DM automation",
+      "features": [
+        "Auto Reply Automation",
+        "Instant response to user messages",
+        "Simple setup & easy to use",
+        "Saves time on manual replies",
+        "Ideal for small businesses & individuals"
+      ]
     },
     {
       "id": "2",
-      "title": "API Integration",
-      "description": "Connect backend APIs with the frontend auth",
-      "status": "in-progress",
-      "priority": "High",
-      "dueDate": "2023-11-21"
+      "name": "Premium",
+      "price": 699,
+      "desc": "Best for growing businesses who want more engagement",
+      "features": [
+        "Everything in Basic Plan",
+        "Auto Reply Automation",
+        "Post-Based Auto DM",
+        "Reels-Based Auto DM",
+        "Increased customers and overall interaction"
+      ]
     },
     {
       "id": "3",
-      "title": "Fix Navigation Bug",
-      "description": "Sidebar does not collapse on mobile",
-      "status": "completed",
-      "priority": "Low",
-      "dueDate": "2023-11-18"
+      "name": "Pro",
+      "price": 1499,
+      "desc": "Advanced solution for full DM marketing automation",
+      "features": [
+        "Everything in Premium Plan",
+        "Auto Reply Automation",
+        "Post & Reels Auto DM",
+        "DM Reply Management (2-way interaction)",
+        "Full Customization Options"
+      ]
     },
     {
-      "title": "Developer",
-      "description": "To fix the bug in the ui",
-      "priority": "Low",
-      "dueDate": "2026-04-16",
-      "status": "in-progress",
-      "id": "hPd2BpL8h9I"
+      "name": "Pro",
+      "price": 799,
+      "desc": "Create a fulure",
+      "features": [
+        "Create a fulureCreate a fulureCreate a fulureCreate a fulure"
+      ],
+      "id": "MyMgNuRfmYg"
     },
     {
-      "title": "ui",
-      "description": "Fix bug",
-      "priority": "Medium",
-      "dueDate": "",
-      "status": "completed",
-      "id": "-LwtifoHhpU"
+      "name": "Pro 1",
+      "price": 799,
+      "desc": "Create a fulure",
+      "features": [
+        "\"Create a fulure\" \"Create a fulure\" \"Create a fulure\""
+      ],
+      "id": "r0RhskhpicI"
+    },
+    {
+      "name": "799",
+      "price": 797,
+      "desc": "Create a fulure",
+      "features": [
+        "\"Create a fulure\"",
+        "\"Create a fulure\"",
+        "\"Create a fulure\""
+      ],
+      "id": "E6vvgjFnDBQ"
+    },
+    {
+      "name": "pro",
+      "price": 799,
+      "desc": "Create a fulure",
+      "features": [
+        "\"Create a fulure\"",
+        "\"Create a fulure\"",
+        "\"Create a fulure\""
+      ],
+      "id": "QeGf-ncJD_k"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

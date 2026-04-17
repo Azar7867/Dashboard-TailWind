@@ -6,6 +6,8 @@ import authRoutes from "./routes/auth.js";
 import bikeRoutes from "./routes/bikeRoutes.js";
 import reviewRoutes from "./routes/reviewRoutes.js";
 import taskRoutes from "./routes/taskRoutes.js";
+import planRoutes from "./routes/planRoutes.js";
+import paymentRoutes from "./routes/paymentRoutes.js";
 import { verifyToken } from "./middleware/authMiddleware.js";
 
 dotenv.config();
@@ -18,6 +20,8 @@ app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/bikes", bikeRoutes);
 app.use("/api/tasks", taskRoutes);
+app.use("/api/plans", planRoutes);
+app.use("/api/payments", paymentRoutes);
 // app.get("/api/bikes", verifyToken, (req, res) => {
 //   res.json(bikes);
 // });
