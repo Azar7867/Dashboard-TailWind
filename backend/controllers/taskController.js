@@ -1,5 +1,5 @@
 import Task from "../models/Task.js";
-
+import Notification from "../models/Notification.js";
 // GET ALL
 export const getTasks = async (req, res) => {
   try {
@@ -52,29 +52,43 @@ export const createTask = async (req, res) => {
 // UPDATE
 export const updateTask = async (req, res) => {
   try {
-    const { title, description, priority, status, dueDate } = req.body;
+    const oldTask = await Task.findById(req.params.id);
 
-    const updatedTask = await Task.findByIdAndUpdate(
-      req.params.id,
-      {
-        title,
-        description,
-        priority,
-        status,
-        dueDate
-      },
-    //   { new: true }
-    { returnDocument: "after" }
-    );
-
-    if (!updatedTask) {
+    if (!oldTask) {
       return res.status(404).json({ message: "Task not found" });
     }
 
+    const updatedTask = await Task.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { returnDocument: "after" }
+    );
+
+    const io = req.app.get("io");
+
+    // ✅ CHECK STATUS CHANGE
+    if (
+      typeof req.body.status !== "undefined" &&
+      oldTask.status !== req.body.status
+    ) {
+      let message = "";
+
+      if (req.body.status === "completed") {
+        message = `Task "${updatedTask.title}" marked as Completed ✅`;
+      } else if (req.body.status === "in-progress") {
+        message = `Task "${updatedTask.title}" moved to In Progress 🔄`;
+      }
+
+      const notification = await Notification.create({ message });
+
+      io.emit("new-notification", notification);
+    }
+
     res.json(updatedTask);
+
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: error.message });
   }
 };
 

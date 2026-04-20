@@ -65,10 +65,13 @@ const toggleStatus = async (task) => {
 
     await axios.put(
       `http://localhost:5000/api/tasks/${task._id}`,
-      { ...task, status: updatedStatus }
+      {
+        status: updatedStatus   // ✅ ONLY SEND STATUS
+      }
     );
 
-    fetchTasks(); // refresh UI
+    fetchTasks();
+
   } catch (error) {
     console.error("Error updating status:", error);
   }
@@ -159,7 +162,7 @@ const handleSubmit = async (e) => {
       <div className="grid md:grid-cols-3 gap-6 mt-6">
   {tasks.map((task) => (
     <div
-  key={task.id}
+  key={task._id}
   onClick={() => {
     setEditingTask(task);
     setForm(task);

@@ -19,7 +19,7 @@ export default function PaymentPage() {
       method: method,
     });
 
-    alert("Payment Successful 🎉");
+    // alert("Payment Successful 🎉");
 
   } catch (err) {
     console.error(err);

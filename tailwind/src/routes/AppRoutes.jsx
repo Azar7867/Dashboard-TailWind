@@ -16,6 +16,9 @@ import Pricing from "../pages/Pricing";
 import AddPlan from "../pages/AddPlan";
 import PaymentPage from "../pages/PaymentPage";
 import PaymentHistory from "../pages/PaymentHistory";
+import CarDetails from "../pages/CarDetails"
+import OfferCars from "../pages/OfferCars";
+import OfferPage from "../pages/OfferPage";
 export default function AppRoutes({ setIsAuth }) {
   return (
     <Routes>
@@ -36,6 +39,9 @@ export default function AppRoutes({ setIsAuth }) {
         <Route path="add-plan" element={<AddPlan />} />
         <Route path="blog/:id" element={<BlogDetails />} />
         <Route path="admin" element={<Admin />} />
+        <Route path="offer" element={<OfferPage />} />
+        <Route path="offer-cars" element={<OfferCars />} />
+        <Route path="cars" element={<CarDetails />} />
       </Route>
     </Routes>
   );
