@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 
 const carSchema = new mongoose.Schema(
   {
@@ -26,8 +26,7 @@ const carSchema = new mongoose.Schema(
       min: 0,
       max: 100,
     },
-  },
-  { timestamps: true }
+  }
 );
 
-export default mongoose.model("Car", carSchema);
+module.exports = mongoose.model("Car", carSchema);

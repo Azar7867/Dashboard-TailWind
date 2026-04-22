@@ -1,7 +1,7 @@
-import Bike from "../models/Bike.js";
+const Bike = require("../models/Bike");
 
 // GET ALL BIKES
-export const getBikes = async (req, res) => {
+const getBikes = async (req, res) => {
   try {
     const bikes = await Bike.find();
     res.json(bikes);
@@ -11,7 +11,7 @@ export const getBikes = async (req, res) => {
 };
 
 // ADD BIKE
-export const addBike = async (req, res) => {
+const addBike = async (req, res) => {
   try {
     const bike = new Bike(req.body);
     await bike.save();
@@ -22,7 +22,7 @@ export const addBike = async (req, res) => {
 };
 
 // DELETE BIKE
-export const deleteBike = async (req, res) => {
+const deleteBike = async (req, res) => {
   try {
     const bike = await Bike.findByIdAndDelete(req.params.id);
 
@@ -37,7 +37,7 @@ export const deleteBike = async (req, res) => {
 };
 
 // UPDATE BIKE
-export const updateBike = async (req, res) => {
+const updateBike = async (req, res) => {
   try {
     const bike = await Bike.findByIdAndUpdate(
       req.params.id,
@@ -53,4 +53,10 @@ export const updateBike = async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
+};
+module.exports = {
+  getBikes,
+  addBike,
+  deleteBike,
+  updateBike,
 };

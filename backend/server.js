@@ -1,45 +1,41 @@
-import express from "express";
-import cors from "cors";
-import dotenv from "dotenv";
-import http from "http";
-import { Server } from "socket.io";
+const express = require("express");
+const cors = require("cors");
+const dotenv = require("dotenv");
+const http = require("http");
+const { Server } = require("socket.io");
 
-import connectDB from "./config/db.js";
+const connectDB = require("./config/db");
 
-// ROUTES
-import authRoutes from "./routes/auth.js";
-import bikeRoutes from "./routes/bikeRoutes.js";
-import reviewRoutes from "./routes/reviewRoutes.js";
-import taskRoutes from "./routes/taskRoutes.js";
-import planRoutes from "./routes/planRoutes.js";
-import paymentRoutes from "./routes/paymentRoutes.js";
-import notificationRoutes from "./routes/notificationRoutes.js";
-import offerRoutes from "./routes/offerRoutes.js";
-import carRoutes from "./routes/carRoutes.js";
-// MIDDLEWARE
-import { verifyToken } from "./middleware/authMiddleware.js";
+const authRoutes = require("./routes/auth");
+const bikeRoutes = require("./routes/bikeRoutes");
+const reviewRoutes = require("./routes/reviewRoutes");
+const taskRoutes = require("./routes/taskRoutes");
+const planRoutes = require("./routes/planRoutes");
+const paymentRoutes = require("./routes/paymentRoutes");
+const notificationRoutes = require("./routes/notificationRoutes");
+const offerRoutes = require("./routes/offerRoutes");
+const carRoutes = require("./routes/carRoutes");
+const salesRoutes = require("./routes/salesRoutes");
+const logoRoutes = require("./routes/logoRoutes");
+
+const { verifyToken } = require("./middleware/authMiddleware");
 
 dotenv.config();
 
-// 🔌 CONNECT DB
 connectDB();
 
-// 🚀 INIT APP
 const app = express();
 const server = http.createServer(app);
 
-// 🔌 SOCKET.IO SETUP
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:5173", // frontend URL
+    origin: "http://localhost:5173", 
     methods: ["GET", "POST"],
   },
 });
 
-// 🔥 MAKE SOCKET GLOBAL
 app.set("io", io);
 
-// 🟢 SOCKET CONNECTION LOG
 io.on("connection", (socket) => {
   console.log("🟢 User Connected:", socket.id);
 
@@ -48,11 +44,12 @@ io.on("connection", (socket) => {
   });
 });
 
-// 🧱 MIDDLEWARE
-app.use(cors());
+app.use(cors({
+  origin: "http://localhost:5173",
+  methods: ["GET", "POST", "PUT", "DELETE"],
+}));
 app.use(express.json());
 
-// 📦 ROUTES
 app.use("/api/auth", authRoutes);
 app.use("/api/bikes", bikeRoutes);
 app.use("/api/tasks", taskRoutes);
@@ -62,20 +59,19 @@ app.use("/api/notifications", notificationRoutes);
 app.use("/api/reviews", reviewRoutes);
 app.use("/api/cars", carRoutes);
 app.use("/api/offers", offerRoutes);
-// 🏠 ROOT
+app.use("/api/sales", salesRoutes);
+app.use("/api/logo", logoRoutes);
+
 app.get("/", (req, res) => {
   res.send("API Running 🚀");
 });
 
-// ❌ GLOBAL ERROR HANDLER (OPTIONAL BUT GOOD)
 app.use((err, req, res, next) => {
   console.error("❌ Error:", err.message);
   res.status(500).json({ message: "Server Error" });
 });
 
-// 🚀 START SERVER (IMPORTANT: use server.listen)
 const PORT = process.env.PORT || 5000;
-
 server.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
 });

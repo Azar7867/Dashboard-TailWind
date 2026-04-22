@@ -19,11 +19,13 @@ import PaymentHistory from "../pages/PaymentHistory";
 import CarDetails from "../pages/CarDetails"
 import OfferCars from "../pages/OfferCars";
 import OfferPage from "../pages/OfferPage";
+import { useState } from "react";
 export default function AppRoutes({ setIsAuth }) {
+   const [logoUrl, setLogoUrl] = useState("");
   return (
     <Routes>
-      <Route path="/" element={<Layout />}>
-        <Route index element={<Dashboard />} />
+        <Route path="/" element={<Layout logoUrl={logoUrl} onLogoChange={setLogoUrl} setIsAuth={setIsAuth} />}>
+        <Route index element={<Dashboard  />} />
         <Route path="analytics" element={<Analytics />} />
         <Route path="team" element={<Team />} />
         <Route path="projects" element={<Projects />} />

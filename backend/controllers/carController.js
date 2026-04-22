@@ -1,7 +1,7 @@
-import Car from "../models/Car.js";
+const Car = require("../models/Car");
 
 // CREATE CAR
-export const createCar = async (req, res) => {
+const createCar = async (req, res) => {
   try {
     const { name, model, price, description } = req.body;
 
@@ -25,7 +25,7 @@ export const createCar = async (req, res) => {
 };
 
 // GET ALL CARS
-export const getCars = async (req, res) => {
+const getCars = async (req, res) => {
   try {
     const cars = await Car.find();
 
@@ -40,7 +40,7 @@ export const getCars = async (req, res) => {
 };
 
 // GET SINGLE CAR
-export const getCarById = async (req, res) => {
+const getCarById = async (req, res) => {
   try {
     const car = await Car.findById(req.params.id);
 
@@ -58,7 +58,7 @@ export const getCarById = async (req, res) => {
 };
 
 // UPDATE CAR
-export const updateCar = async (req, res) => {
+const updateCar = async (req, res) => {
   try {
     const car = await Car.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
@@ -83,7 +83,7 @@ export const updateCar = async (req, res) => {
 };
 
 // DELETE CAR
-export const deleteCar = async (req, res) => {
+const deleteCar = async (req, res) => {
   try {
     const car = await Car.findByIdAndDelete(req.params.id);
 
@@ -104,7 +104,7 @@ export const deleteCar = async (req, res) => {
 };
 
 // GET DISCOUNTED CARS
-export const getCarsWithDiscount = async (req, res) => {
+const getCarsWithDiscount = async (req, res) => {
   try {
     let cars;
 
@@ -140,4 +140,12 @@ export const getCarsWithDiscount = async (req, res) => {
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
+};
+module.exports = {
+  createCar,
+  getCars,
+  getCarById,
+  updateCar,
+  deleteCar,
+  getCarsWithDiscount,
 };

@@ -1,8 +1,8 @@
-import Payment from "../models/Payment.js";
-import Notification from "../models/Notification.js";
+const Payment = require("../models/Payment");
+const Notification = require("../models/Notification");
 
 // ➕ CREATE PAYMENT
-export const createPayment = async (req, res) => {
+const createPayment = async (req, res) => {
   try {
     const payment = await Payment.create(req.body);
 
@@ -22,11 +22,15 @@ export const createPayment = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-export const getPayments = async (req, res) => {
+const getPayments = async (req, res) => {
   try {
     const payments = await Payment.find().sort({ createdAt: -1 });
     res.json(payments);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
+};
+module.exports = {
+  createPayment,
+  getPayments,
 };

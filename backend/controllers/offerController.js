@@ -1,7 +1,7 @@
-import Car from "../models/Car.js";
+const Car = require("../models/Car");
 
 // APPLY OFFER
-export const applyOffer = async (req, res) => {
+const applyOffer = async (req, res) => {
   try {
     const { carId, offer } = req.body;
 
@@ -36,7 +36,7 @@ export const applyOffer = async (req, res) => {
 };
 
 // GET OFFERS
-export const getOffers = async (req, res) => {
+const getOffers = async (req, res) => {
   try {
     const cars = await Car.find({ offer: { $gt: 0 } });
 
@@ -51,7 +51,7 @@ export const getOffers = async (req, res) => {
 };
 
 // UPDATE OFFER
-export const updateOffer = async (req, res) => {
+const updateOffer = async (req, res) => {
   try {
     const { offer } = req.body;
 
@@ -86,7 +86,7 @@ export const updateOffer = async (req, res) => {
 };
 
 // DELETE OFFER
-export const deleteOffer = async (req, res) => {
+const deleteOffer = async (req, res) => {
   try {
     const car = await Car.findByIdAndUpdate(
       req.params.id,
@@ -109,4 +109,10 @@ export const deleteOffer = async (req, res) => {
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
+};
+module.exports = {
+  applyOffer,
+  getOffers,
+  updateOffer,
+  deleteOffer,
 };

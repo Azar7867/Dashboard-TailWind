@@ -1,10 +1,10 @@
-import express from "express";
-import {
+const express = require("express");
+const {
   createNotification,
   getNotifications,
   deleteNotification,
   clearNotifications,
-} from "../controllers/notificationController.js";
+} = require("../controllers/notificationController");
 
 const router = express.Router();
 
@@ -13,4 +13,4 @@ router.get("/", getNotifications);
 router.delete("/:id", deleteNotification);
 router.delete("/", clearNotifications);
 
-export default router;
+module.exports = router;

@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 
 const taskSchema = new mongoose.Schema({
   title: String,
@@ -14,6 +14,6 @@ const taskSchema = new mongoose.Schema({
     default: "in-progress"
   },
   dueDate: String
-}, { timestamps: true });
+});
 
-export default mongoose.model("Task", taskSchema);
+module.exports = mongoose.model("Task", taskSchema);

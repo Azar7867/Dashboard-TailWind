@@ -8,7 +8,7 @@ export default function App() {
     <BrowserRouter>
     <Toaster position="top-right" />
     <ToastContainer position="top-right" autoClose={2000} />
-     <RootRouter />
+     <RootRouter  />
     </BrowserRouter>
   );
 }

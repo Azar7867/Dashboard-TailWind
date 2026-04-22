@@ -1,7 +1,7 @@
-import Task from "../models/Task.js";
-import Notification from "../models/Notification.js";
+const Task = require("../models/Task");
+const Notification = require("../models/Notification");
 // GET ALL
-export const getTasks = async (req, res) => {
+const getTasks = async (req, res) => {
   try {
     const tasks = await Task.find();
     res.json(tasks);
@@ -9,7 +9,7 @@ export const getTasks = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
-export const getTaskById = async (req, res) => {
+const getTaskById = async (req, res) => {
   try {
     const task = await Task.findById(req.params.id);
 
@@ -23,7 +23,7 @@ export const getTaskById = async (req, res) => {
   }
 };
 // CREATE
-export const createTask = async (req, res) => {
+const createTask = async (req, res) => {
   try {
     const { title, description, priority, status, dueDate } = req.body;
 
@@ -50,7 +50,7 @@ export const createTask = async (req, res) => {
 };
 
 // UPDATE
-export const updateTask = async (req, res) => {
+const updateTask = async (req, res) => {
   try {
     const oldTask = await Task.findById(req.params.id);
 
@@ -93,11 +93,18 @@ export const updateTask = async (req, res) => {
 };
 
 // DELETE
-export const deleteTask = async (req, res) => {
+const deleteTask = async (req, res) => {
   try {
     await Task.findByIdAndDelete(req.params.id);
     res.json({ message: "Task deleted" });
   } catch (error) {
     res.status(500).json({ message: "Server error" });
   }
+};
+module.exports = {
+  getTasks,
+  getTaskById,
+  createTask,
+  updateTask,
+  deleteTask,
 };

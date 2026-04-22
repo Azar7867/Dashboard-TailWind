@@ -7,7 +7,7 @@ import AdminLogin from "../pages/AdminLogin";
 import AdminProtectedRoute from "./AdminProtectedRoute";
 import Admin from "../pages/Admin";
 
-export default function RootRouter() {
+export default function RootRouter({ }) {
   const location = useLocation();
 
   const [isAuth, setIsAuth] = useState(

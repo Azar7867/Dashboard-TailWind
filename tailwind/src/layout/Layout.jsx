@@ -3,7 +3,7 @@ import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
 import { Outlet } from "react-router-dom";
 
-export default function Layout({ setIsAuth }) {
+export default function Layout({ setIsAuth, logoUrl, onLogoChange }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
@@ -19,7 +19,8 @@ export default function Layout({ setIsAuth }) {
       )}
 
       {/* Sidebar Component */}
-      <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
+      <Sidebar isOpen={isSidebarOpen} 
+ toggleSidebar={toggleSidebar}  />
       
       {/* Main Content */}
       <div className="flex-1 flex flex-col h-screen relative overflow-hidden">
